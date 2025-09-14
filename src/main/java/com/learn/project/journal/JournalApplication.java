@@ -8,17 +8,11 @@ import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement
 public class JournalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(JournalApplication.class, args);
 	}
-
-	@Bean
-	MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
-		return new MongoTransactionManager(dbFactory);
-	}//This bean lets Spring know how to manage MongoDB transactions behind the scenes
 
 }
 //In SQL (JPA/Hibernate):
@@ -29,3 +23,12 @@ public class JournalApplication {
 //Spring Boot does not auto-configure transaction management for MongoDB by default, because:
 //Transactions in MongoDB require replica sets or sharded clusters.
 //Not all MongoDB use cases need transactions.
+
+//Transactions only work in MongoDB if it's running as a replica set.
+//Set this up locally with:
+//
+//mongod --replSet rs0 --bind_ip localhost
+//
+//Then in the Mongo shell:
+//
+//rs.initiate()
