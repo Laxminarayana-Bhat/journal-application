@@ -1,7 +1,9 @@
 package com.learn.project.journal.controller;
 
 import com.learn.project.journal.model.JournalEntry;
+import com.learn.project.journal.model.User;
 import com.learn.project.journal.service.JournalService;
+import com.learn.project.journal.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,22 +15,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/journal/api/v1")
+@RequestMapping("/api/v1/journals")
 public class JournalController {
 
     @Autowired
-    private JournalService journalService;
+    JournalService journalService;
+    @Autowired
+    UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createEntry(@RequestBody JournalEntry journalEntry) {
+    @PostMapping("/create/{userName}")
+    public ResponseEntity<String> createEntry(@RequestBody JournalEntry journalEntry, @RequestParam String userName) {
         journalEntry.setDate(LocalDateTime.now());
-        journalService.saveEntry(journalEntry);
+        User user = userService.findByUserName(userName);
+
+        journalService.saveEntry(journalEntry, userName);
         return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
-    @GetMapping("/getall")
-    public List<JournalEntry> getAll() {
-        return journalService.findAll();
+    @GetMapping("/getall/{userName}")
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesByUser(@RequestParam String userName) {
+        return new ResponseEntity<>(userService.findByUserName(userName).getJournalEntryList(), HttpStatus.OK);
     }
 
     @GetMapping("/get/{objectId}")
@@ -36,16 +42,16 @@ public class JournalController {
         return journalService.findById(objectId).orElse(null);
     }
 
-    @DeleteMapping("wipe/{objectId}")
-    public ResponseEntity<String> deleteById(@PathVariable ObjectId objectId) {
-        journalService.deleteById(objectId);
+    @DeleteMapping("wipe/{userName}/{objectId}")
+    public ResponseEntity<String> deleteById(@PathVariable String userName, @PathVariable ObjectId objectId) {
+        journalService.deleteById(objectId, userName);
         return new ResponseEntity<>(objectId + " deleted", HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("put/id/{id}")
+    @PutMapping("put/{userName}/{id}")
     //path variable - we can put in link
     //request param - we can pass it as a parameter
-    public ResponseEntity<?> updateEntry(@PathVariable ObjectId id,@RequestBody JournalEntry journalEntry) {
+    public ResponseEntity<?> updateEntry(@PathVariable String userName, @PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
         //? - wildcard, it can return any type
         JournalEntry old = journalService.findById(id).orElse(null);
 
@@ -53,7 +59,7 @@ public class JournalController {
             old.setContent(journalEntry.getContent());
             old.setTitle(journalEntry.getTitle());
         }
-        journalService.saveEntry(old);
+        journalService.saveUpdatedJournal(old);
         return new ResponseEntity<>(old, HttpStatus.ACCEPTED);
     }
 }
