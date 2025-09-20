@@ -52,7 +52,7 @@ public class JournalService {
                 userService.saveEntry(user);
                 journalEntryRepository.deleteById(objectId);
             }
-            return true;
+            return b;
         } catch (RuntimeException e) {
             log.error("e: ", e);
             return false;
