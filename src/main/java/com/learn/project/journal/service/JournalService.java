@@ -3,6 +3,7 @@ package com.learn.project.journal.service;
 import com.learn.project.journal.model.JournalEntry;
 import com.learn.project.journal.model.User;
 import com.learn.project.journal.repository.JournalEntryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class JournalService {
 
@@ -29,7 +31,7 @@ public class JournalService {
     }
 
     @Transactional
-    public void saveUpdatedJournal(JournalEntry journalEntry){
+    public void saveUpdatedJournal(JournalEntry journalEntry) {
         journalEntryRepository.save(journalEntry);
     }
 
@@ -42,10 +44,18 @@ public class JournalService {
     }
 
     @Transactional
-    public void deleteById(ObjectId objectId, String userName) {
-        User user = userService.findByUserName(userName);
-        user.getJournalEntryList().removeIf(entry -> entry.getId().equals(objectId));
-        userService.saveEntry(user);
-        journalEntryRepository.deleteById(objectId);
+    public boolean deleteById(ObjectId objectId, String userName) {
+        try {
+            User user = userService.findByUserName(userName);
+            boolean b = user.getJournalEntryList().removeIf(entry -> entry.getId().equals(objectId));
+            if (b) {
+                userService.saveEntry(user);
+                journalEntryRepository.deleteById(objectId);
+            }
+            return true;
+        } catch (RuntimeException e) {
+            log.error("e: ", e);
+            return false;
+        }
     }
 }
