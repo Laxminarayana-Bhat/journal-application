@@ -18,10 +18,10 @@ public class UserController {
     @Autowired
     UserService userService;
 
-//    @GetMapping("/getall")
-//    public ResponseEntity<List<User>> getAllUsers() {
-//        return new ResponseEntity<>(userService.findAll(), HttpStatus.ACCEPTED);
-//    }
+    @GetMapping("/getall")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.ACCEPTED);
+    }
 //
 //    @PostMapping("/create")
 //    public ResponseEntity<?> createUser(@RequestBody User user) {
@@ -38,7 +38,7 @@ public class UserController {
             System.out.println("user from auth - "+byUserName.getUserName());
             byUserName.setUserName(byUserName.getUserName());
             byUserName.setPassword(user.getPassword());
-            userService.saveNewUser(byUserName);
+            userService.saveEntry(byUserName);
         } //else add a rest exception handler in controller advice
         return new ResponseEntity<>(byUserName, HttpStatus.NO_CONTENT);
     }

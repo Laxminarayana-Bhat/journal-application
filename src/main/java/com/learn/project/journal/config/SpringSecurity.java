@@ -24,14 +24,8 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests(request -> request
-//                        .requestMatchers("/public/**").permitAll()
-                                .requestMatchers("/api/v1/journals/**"
-                                        , "/api/v1/users/**"
-                                ).authenticated()
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest()
-                                .permitAll()
-//                        .authenticated()
+                        .requestMatchers("/api/v1/journals/**", "/api/v1/users/**").authenticated()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN").anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
