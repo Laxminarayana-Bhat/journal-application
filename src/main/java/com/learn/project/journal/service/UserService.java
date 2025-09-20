@@ -4,6 +4,8 @@ import com.learn.project.journal.model.User;
 import com.learn.project.journal.repository.UserEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,18 @@ public class UserService {
     @Autowired
     private UserEntryRepository userEntryRepository;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Transactional
     public void saveEntry(User user) {
         userEntryRepository.save(user);
+    }
+
+    @Transactional
+    public void saveNewUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(List.of("USER"));
+        saveEntry(user);
     }
 
     public List<User> findAll() {
@@ -32,8 +43,12 @@ public class UserService {
     public void deleteById(ObjectId objectId) {
         userEntryRepository.deleteById(objectId);
     }
+    public void deleteByUserName(String userName) {
+        userEntryRepository.deleteByUserName(userName);
+    }
 
-    public User findByUserName(String userName){
+
+    public User findByUserName(String userName) {
         return userEntryRepository.findByUserName(userName);
     }
 }
