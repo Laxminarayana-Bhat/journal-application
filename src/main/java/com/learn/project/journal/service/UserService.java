@@ -59,10 +59,4 @@ public class UserService {
         return userEntryRepository.findByUserName(userName);
     }
 
-    public static void main(String[] args) {
-        List<String> roles = List.of("ADMIN", "USER");
-        String[] roleArray = roles.toArray(new String[0]);
-
-        System.out.println(roleArray+"----"+roles);
-    }
 }
