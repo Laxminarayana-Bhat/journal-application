@@ -35,7 +35,7 @@ public class AppCache {
         System.out.println("Clear cache invoked");
     }
     //0/1 = every 1 minute starting at 0
-    //
+    // [sec,min,hour,day of month, month, day of week(sun, mon ..)]
     //*/1 = every 1 minute (starts at 0 by default)    - both are same
 
 

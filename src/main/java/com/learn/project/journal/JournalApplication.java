@@ -25,7 +25,7 @@ public class JournalApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
 //        System.out.println(userRepo.getUserFor());
-//        emailService.sendEmail("laxmishalekha123@gmail.com","test sub","Hello, how are you? Thanks,");
+        emailService.sendEmail("laxmishalekha123@gmail.com","test sub","Hello, how are you? Thanks,");
     }
 }
 //In SQL (JPA/Hibernate):
