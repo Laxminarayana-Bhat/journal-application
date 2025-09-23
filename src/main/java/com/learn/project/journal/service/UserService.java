@@ -3,6 +3,8 @@ package com.learn.project.journal.service;
 import com.learn.project.journal.model.User;
 import com.learn.project.journal.repository.UserEntryRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +18,9 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserEntryRepository userEntryRepository;
+    UserEntryRepository userEntryRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);//logback built-in, can be customized using logback.xml
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -30,12 +34,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of("USER"));
         saveEntry(user);
+        logger.info("{} saved", user.getUserName());
     }
 
     @Transactional
     public void saveAdmin(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(List.of("USER","ADMIN"));
+        user.setRoles(List.of("USER", "ADMIN"));
         saveEntry(user);
     }
 
@@ -50,6 +55,7 @@ public class UserService {
     public void deleteById(ObjectId objectId) {
         userEntryRepository.deleteById(objectId);
     }
+
     public void deleteByUserName(String userName) {
         userEntryRepository.deleteByUserName(userName);
     }

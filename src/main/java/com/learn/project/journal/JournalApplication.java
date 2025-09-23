@@ -1,19 +1,32 @@
 package com.learn.project.journal;
 
+import com.learn.project.journal.repository.UserRepoImpl;
+import com.learn.project.journal.service.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.MongoDatabaseFactory;
-import org.springframework.data.mongodb.MongoTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class JournalApplication {
+@EnableScheduling
+public class JournalApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(JournalApplication.class, args);
-	}
+    @Autowired
+    UserRepoImpl userRepo;
 
+    @Autowired
+    EmailService emailService;
+
+    public static void main(String[] args) {
+        SpringApplication.run(JournalApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
+//        System.out.println(userRepo.getUserFor());
+//        emailService.sendEmail("laxmishalekha123@gmail.com","test sub","Hello, how are you? Thanks,");
+    }
 }
 //In SQL (JPA/Hibernate):
 //Spring Boot auto-configures transaction management for JPA.

@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: dev
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: shambhubhat2468@gmail.com
+    password: tsue zaxu ourq uqgj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable:
+              true
+
+#    instead of this we cna add the same in configs/env variable as spring.profiles.active=dev
+#      or -Dspring.profiles.active=dev in command line with mvn clean package etc.
+
+weather-api-key: ${WEATHER_API_KEY}
+
+

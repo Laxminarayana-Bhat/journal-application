@@ -1,6 +1,7 @@
 package com.learn.project.journal.config;
 
 import com.learn.project.journal.service.UserDetailServiceImpl;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,12 @@ public class SpringSecurity {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @PostConstruct
+    public void init() {
+        // Initialization logic
+        System.out.println("Bean is fully initialized with dependencies!");
     }
 
 }
