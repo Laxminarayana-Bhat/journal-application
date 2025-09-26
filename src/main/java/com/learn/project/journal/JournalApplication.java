@@ -2,6 +2,7 @@ package com.learn.project.journal;
 
 import com.learn.project.journal.repository.UserRepoImpl;
 import com.learn.project.journal.service.EmailService;
+import com.learn.project.journal.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +19,9 @@ public class JournalApplication implements CommandLineRunner {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    RedisService redisService;
+
     public static void main(String[] args) {
         SpringApplication.run(JournalApplication.class, args);
     }
@@ -25,7 +29,7 @@ public class JournalApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
 //        System.out.println(userRepo.getUserFor());
-        emailService.sendEmail("laxmishalekha123@gmail.com","test sub","Hello, how are you? Thanks,");
+//        emailService.sendEmail("laxmishalekha123@gmail.com","test sub","Hello, how are you? Thanks,");
     }
 }
 //In SQL (JPA/Hibernate):

@@ -4,7 +4,6 @@ import com.learn.project.journal.model.WeatherResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,14 +14,23 @@ import org.springframework.web.client.RestTemplate;
 public class WeatherApiService {
 
     @Value("${weather-api-key}")
-    private String API_KEY;
+    String API_KEY;
 
     private static final String API_ENDPOINT = "https://api.weatherstack.com/current?access_key=API_KEY&query=";
 
     @Autowired
     private final RestTemplate restTemplate;
 
+    @Autowired
+    RedisService redisService;
+
     public WeatherResponse getWeatherData(String city) {
+
+        WeatherResponse cached = redisService.getKey("weather_of_" + city, WeatherResponse.class);
+        if (cached != null) {
+            return cached;
+        }
+
         String finalReqApi = API_ENDPOINT.replace("API_KEY", API_KEY) + city;
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.set("key", "val");
@@ -32,8 +40,12 @@ public class WeatherApiService {
         ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalReqApi, HttpMethod.GET, null, WeatherResponse.class);
         // uri, http method, HttpEntity, response type or object
 //        ResponseEntity<WeatherResponse> var = restTemplate.getForEntity("uri", WeatherResponse.class, Map.of("pageStart",1,"param2","value"));
-
-        return response.getBody();
+        WeatherResponse body = response.getBody();
+        if (body != null) {
+            //Add Value to Redis DB for 1 hour
+            redisService.putKey("weather_of_" + city, body, 100L);
+        }
+        return body;
     }
 
     /*
