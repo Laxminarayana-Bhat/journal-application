@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+    #    instead of this we can add the same in configs/env variable as spring.profiles.active=dev
+    #      or -Dspring.profiles.active=dev in command line with mvn clean package etc.
   redis:
     host: localhost
     port: 6379
@@ -16,9 +18,18 @@ spring:
           starttls:
             enable:
               true
-
-#    instead of this we cna add the same in configs/env variable as spring.profiles.active=dev
-#      or -Dspring.profiles.active=dev in command line with mvn clean package etc.
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    template:
+      default-topic: test-topic
 
 weather-api-key: ${WEATHER_API_KEY}
 
