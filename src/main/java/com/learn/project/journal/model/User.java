@@ -1,5 +1,6 @@
 package com.learn.project.journal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -16,15 +17,18 @@ import java.util.List;
 public class User {
 
     @Id
+    @JsonIgnore
     private ObjectId id;
     @Indexed(unique = true)
     @NonNull
     private String userName;
     @NonNull
     private String password;
+    @JsonIgnore
     @DBRef
     private List<JournalEntry> journalEntryList = new ArrayList<>();
 
-    private List<String> roles=new ArrayList<>();
+    @JsonIgnore
+    private List<String> roles = new ArrayList<>();
 
 }
